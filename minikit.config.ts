@@ -1,0 +1,27 @@
+// minikit.config.ts
+export const minikitConfig = {
+  accountAssociation: {
+    header: "",
+    payload: "",
+    signature: ""
+  },
+  miniapp: {
+    version: "1",
+    name: "Wallet Connect",
+    subtitle: "Simple Wallet Connection",
+    description: "A simple wallet connection interface for Base Mini Apps",
+    screenshotUrls: [],
+    iconUrl: "/icon.png",
+    splashImageUrl: "/splash.png",
+    splashBackgroundColor: "#000000",
+    homeUrl: "https://connect-wallet-tan.vercel.app",
+    webhookUrl: "https://connect-wallet-tan.vercel.app/api/webhook",
+    primaryCategory: "social",
+    tags: ["wallet", "connect", "web3"],
+    heroImageUrl: "/icon.png",
+    tagline: "Connect your wallet with ease",
+    ogTitle: "Wallet Connect Mini App",
+    ogDescription: "Simple and secure wallet connection for Base",
+    ogImageUrl: "/icon.png"
+  }
+} as const;

@@ -3,6 +3,7 @@
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { useMiniKit } from "@coinbase/onchainkit/minikit";
 import { useEffect } from "react";
+import Image from "next/image";
 
 function truncateAddress(address: string, start = 6, end = 4) {
   return `${address.substring(0, start)}...${address.substring(address.length - end)}`;
@@ -30,10 +31,13 @@ export function SimpleWalletConnect() {
         {/* Profile Picture */}
         {context?.user?.pfpUrl && (
           <div className="flex justify-center mb-6">
-            <img
+            <Image
               src={context.user.pfpUrl}
               alt="Profile"
-              className="w-24 h-24 rounded-full border-4 border-gray-200"
+              width={96}
+              height={96}
+              className="rounded-full border-4 border-gray-200"
+              priority
             />
           </div>
         )}
