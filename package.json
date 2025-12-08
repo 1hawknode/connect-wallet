@@ -1,13 +1,12 @@
 {
-  "name": "wallet-connect",
+  "name": "mini-app-full-demo",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "next build --turbo && npm run manifest",
+    "build": "next build --turbo",
     "start": "next start",
-    "lint": "next lint",
-    "manifest": "node scripts/generate-manifest.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@base-org/account": "^2.0.2",
@@ -25,16 +24,17 @@
     "clsx": "^2.1.1",
     "framer-motion": "^11.15.0",
     "jotai": "^2.13.5",
-    "lucide-react": "^0.450.0",
-    "next": "^15.1.2",
-    "next-themes": "^0.3.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "lucide-react": "^0.542.0",
+    "next": "^15.5.7",
+    "ox": "^0.9.4",
+    "react": "^19.1.2",
+    "react-dom": "^19.1.2",
+    "siwe": "^3.0.0",
     "sonner": "^2.0.0",
-    "tailwind-merge": "^2.6.1",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.0",
-    "viem": "^2.23.7",
+    "viem": "^2.37.1",
     "wagmi": "^2.16.9"
   },
   "devDependencies": {
