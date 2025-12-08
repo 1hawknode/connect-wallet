@@ -22,41 +22,45 @@ export function SimpleWalletConnect() {
     }
   }, [connectors, isConnected, connect]);
 
+  // Get profile picture with fallback
+  const profilePicture = context?.user?.pfpUrl || "/default-avatar.png";
+
   return (
     <div 
       className="min-h-screen flex flex-col items-center justify-center p-4"
       style={{ backgroundColor: '#000000' }}
     >
-      <div className="w-full max-w-md rounded-xl p-8 space-y-6">
-        {/* Profile Picture */}
-        {context?.user?.pfpUrl && (
-          <div className="flex justify-center mb-6">
-            <Image
-              src={context.user.pfpUrl}
-              alt="Profile"
-              width={96}
-              height={96}
-              className="rounded-full border-4 border-gray-200"
-              priority
-            />
-          </div>
-        )}
+      <div className="w-full max-w-md rounded-2xl p-6">
+        {/* Profile Picture - Always visible */}
+        <div className="flex justify-center mb-4">
+          <Image
+            src={profilePicture}
+            alt="Profile"
+            width={80}
+            height={80}
+            className="rounded-full border-2 border-gray-300"
+            priority
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "/default-avatar.png";
+            }}
+          />
+        </div>
 
         {/* Wallet Connection Status */}
-        <div className="text-center space-y-4">
+        <div className="text-center">
           {isConnected && address ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div 
-                className="text-lg font-medium text-white px-4 py-3 rounded-lg"
+                className="text-sm font-medium text-white px-4 py-2 rounded-lg"
                 style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
               >
                 {truncateAddress(address)}
               </div>
               <button
                 onClick={() => disconnect()}
-                className="w-full px-4 py-2 rounded-lg transition-colors"
+                className="w-full px-4 py-2 rounded-lg text-white font-medium transition-colors"
                 style={{ 
-                  backgroundColor: '#000080',
+                  backgroundColor: '#1E40AF',
                   color: '#FFFFFF'
                 }}
               >
@@ -67,9 +71,9 @@ export function SimpleWalletConnect() {
             <button
               onClick={() => connectors[0] && connect({ connector: connectors[0] })}
               disabled={!connectors[0]}
-              className="w-full px-6 py-3 rounded-lg transition-colors disabled:opacity-50"
+              className="w-full px-4 py-2 rounded-lg text-white font-medium transition-colors disabled:opacity-50"
               style={{ 
-                backgroundColor: '#000080',
+                backgroundColor: '#1E40AF',
                 color: '#FFFFFF'
               }}
             >
