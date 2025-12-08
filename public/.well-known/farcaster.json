@@ -1,0 +1,25 @@
+{
+  "name": "Wallet Connect",
+  "description": "A simple wallet connection interface for Base Mini Apps",
+  "icon": "/icon.png",
+  "splash": {
+    "image": "/splash.png",
+    "background": "#000000"
+  },
+  "version": "1",
+  "categories": [
+    "social"
+  ],
+  "tags": [
+    "wallet",
+    "connect",
+    "web3"
+  ],
+  "url": "https://connect-wallet-tan.vercel.app",
+  "webhook": "https://connect-wallet-tan.vercel.app/api/webhook",
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  }
+}
