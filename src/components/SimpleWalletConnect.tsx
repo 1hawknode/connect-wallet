@@ -13,9 +13,8 @@ interface FarcasterUser {
   pfpUrl?: string;
   username?: string;
   displayName?: string;
-  fid: number;  // Changed to number to match Farcaster SDK
+  fid: number;
   bio?: string;
-  // Add other fields from Farcaster user context as needed
 }
 
 function truncateAddress(address: string, start = 6, end = 4) {
@@ -26,7 +25,7 @@ export function SimpleWalletConnect() {
   // State
   const [isInMiniApp, setIsInMiniApp] = useState(false);
   const [user, setUser] = useState<FarcasterUser | null>(null);
-  const [_imageError, setImageError] = useState(false);
+  const [pfpError, setPfpError] = useState(false);
 
   // Wagmi hooks
   const { address, isConnected } = useAccount();
@@ -43,7 +42,14 @@ export function SimpleWalletConnect() {
         if (miniAppStatus) {
           const context = await sdk.context;
           console.log('Farcaster context:', context);
-          setUser(context.user as FarcasterUser);  // Type assertion here
+          if (context?.user) {
+            setUser({
+              pfpUrl: context.user.pfpUrl,
+              username: context.user.username,
+              displayName: context.user.displayName,
+              fid: context.user.fid
+            });
+          }
         }
       } catch (error) {
         console.error("Error loading user data:", error);
@@ -57,30 +63,26 @@ export function SimpleWalletConnect() {
   const handleConnect = () => {
     if (connectors[0]) {
       connect({ connector: connectors[0] });
-    } else {
-      console.warn('No wallet connector available');
     }
   };
 
-  // Rest of your component remains the same...
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-black">
       <div className="w-full max-w-md rounded-2xl p-6">
         {/* Profile Picture */}
         <div className="flex justify-center mb-4">
           <div className="relative w-20 h-20 rounded-full border-2 border-gray-300 overflow-hidden">
-            {user?.pfpUrl ? (
-              <Image
+            {user?.pfpUrl && !pfpError ? (
+              <img
                 src={user.pfpUrl}
                 alt="Profile"
                 width={80}
                 height={80}
-                className="object-cover"
+                className="w-full h-full object-cover"
                 onError={() => {
-                  console.error('Failed to load profile image:', user.pfpUrl);
-                  setImageError(true);
+                  console.error('Failed to load profile image');
+                  setPfpError(true);
                 }}
-                priority
               />
             ) : (
               <div className="w-full h-full bg-gray-700 flex items-center justify-center">
@@ -103,11 +105,8 @@ export function SimpleWalletConnect() {
                 {truncateAddress(address)}
               </div>
               <button
-                onClick={() => {
-                  console.log('Disconnecting wallet...');
-                  disconnect();
-                }}
-                className="w-full px-4 py-2 rounded-lg text-white font-medium transition-colors"
+                onClick={() => disconnect()}
+                className="w-full px-4 py-2 rounded-lg text-white font-medium"
                 style={{ 
                   backgroundColor: '#1E40AF',
                 }}
@@ -118,7 +117,7 @@ export function SimpleWalletConnect() {
           ) : (
             <button
               onClick={handleConnect}
-              className="w-full px-4 py-2 rounded-lg text-white font-medium transition-colors"
+              className="w-full px-4 py-2 rounded-lg text-white font-medium"
               style={{ 
                 backgroundColor: '#1E40AF',
               }}

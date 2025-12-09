@@ -2,6 +2,13 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  images: {
+    domains: [
+      'cdn.farcaster.xyz',  // Farcaster's CDN for profile pictures
+      'res.cloudinary.com', // Common image hosting
+      'i.imgur.com'         // Common image hosting
+    ],
+  },
   async headers() {
     return [
       {
