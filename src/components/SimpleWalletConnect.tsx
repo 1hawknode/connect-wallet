@@ -8,6 +8,16 @@ import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
+// Types
+interface FarcasterUser {
+  pfpUrl?: string;
+  username?: string;
+  displayName?: string;
+  fid: number;  // Changed to number to match Farcaster SDK
+  bio?: string;
+  // Add other fields from Farcaster user context as needed
+}
+
 function truncateAddress(address: string, start = 6, end = 4) {
   return `${address.substring(0, start)}...${address.substring(address.length - end)}`;
 }
@@ -15,8 +25,8 @@ function truncateAddress(address: string, start = 6, end = 4) {
 export function SimpleWalletConnect() {
   // State
   const [isInMiniApp, setIsInMiniApp] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [imageError, setImageError] = useState(false);
+  const [user, setUser] = useState<FarcasterUser | null>(null);
+  const [_imageError, setImageError] = useState(false);
 
   // Wagmi hooks
   const { address, isConnected } = useAccount();
@@ -33,7 +43,7 @@ export function SimpleWalletConnect() {
         if (miniAppStatus) {
           const context = await sdk.context;
           console.log('Farcaster context:', context);
-          setUser(context.user);
+          setUser(context.user as FarcasterUser);  // Type assertion here
         }
       } catch (error) {
         console.error("Error loading user data:", error);
@@ -52,15 +62,7 @@ export function SimpleWalletConnect() {
     }
   };
 
-  // Debug logging
-  useEffect(() => {
-    console.log('=== DEBUG ===');
-    console.log('Farcaster user:', user);
-    console.log('Is in Mini App:', isInMiniApp);
-    console.log('Is connected:', isConnected);
-    console.log('Address:', address);
-  }, [user, isInMiniApp, isConnected, address]);
-
+  // Rest of your component remains the same...
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-black">
       <div className="w-full max-w-md rounded-2xl p-6">
