@@ -1,7 +1,10 @@
 "use client";
 
+// External dependencies
+import { sdk } from "@farcaster/miniapp-sdk";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { useMiniKit } from "@coinbase/onchainkit/minikit";
+
+// Built-in modules
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -10,11 +13,35 @@ function truncateAddress(address: string, start = 6, end = 4) {
 }
 
 export function SimpleWalletConnect() {
+  // State
+  const [isInMiniApp, setIsInMiniApp] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [imageError, setImageError] = useState(false);
+
+  // Wagmi hooks
   const { address, isConnected } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
-  const { context } = useMiniKit();
-  const [imageError, setImageError] = useState(false);
+
+  // Initialize Farcaster SDK and load user data
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const miniAppStatus = await sdk.isInMiniApp();
+        setIsInMiniApp(miniAppStatus);
+
+        if (miniAppStatus) {
+          const context = await sdk.context;
+          console.log('Farcaster context:', context);
+          setUser(context.user);
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+      }
+    };
+
+    loadUserData();
+  }, []);
 
   // Handle wallet connection
   const handleConnect = () => {
@@ -28,11 +55,11 @@ export function SimpleWalletConnect() {
   // Debug logging
   useEffect(() => {
     console.log('=== DEBUG ===');
-    console.log('User object:', context?.user);
-    console.log('PFP URL:', context?.user?.pfpUrl);
+    console.log('Farcaster user:', user);
+    console.log('Is in Mini App:', isInMiniApp);
     console.log('Is connected:', isConnected);
     console.log('Address:', address);
-  }, [context, isConnected, address]);
+  }, [user, isInMiniApp, isConnected, address]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-black">
@@ -40,21 +67,24 @@ export function SimpleWalletConnect() {
         {/* Profile Picture */}
         <div className="flex justify-center mb-4">
           <div className="relative w-20 h-20 rounded-full border-2 border-gray-300 overflow-hidden">
-            {context?.user?.pfpUrl ? (
+            {user?.pfpUrl ? (
               <Image
-                src={context.user.pfpUrl}
+                src={user.pfpUrl}
                 alt="Profile"
-                fill
+                width={80}
+                height={80}
                 className="object-cover"
                 onError={() => {
-                  console.error('Failed to load profile image');
+                  console.error('Failed to load profile image:', user.pfpUrl);
                   setImageError(true);
                 }}
                 priority
               />
             ) : (
               <div className="w-full h-full bg-gray-700 flex items-center justify-center">
-                <span className="text-gray-300 text-xs">No Image</span>
+                <span className="text-gray-300 text-xs">
+                  {isInMiniApp ? 'No Profile' : 'Not in Mini App'}
+                </span>
               </div>
             )}
           </div>
